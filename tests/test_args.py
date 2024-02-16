@@ -24,18 +24,18 @@ class TestArgumLogic:
     next_year = this_year + 1
 
     @staticmethod
-    def run_subprocess(command) -> subprocess.CompletedProcess:
+    def run_subprocess(command) -> str:
         """
         subprocess to run the command line arguments
         :param command:
         :return:
         """
-        result = subprocess.run(command,
-                                stderr=subprocess.PIPE,
-                                text=True,
-                                shell=True,
-                                check=False)
-        return result
+        result = subprocess.Popen(command,
+                                  stderr=subprocess.PIPE,
+                                  stdout=subprocess.PIPE,
+                                  shell=True
+                                  )
+        return str(result.communicate()[1])
 
     # REQUEST ARGUMENT
     @pytest.mark.request
@@ -47,7 +47,7 @@ class TestArgumLogic:
         command = ['python', './main.py']
         result = self.run_subprocess(command)
 
-        assert 'error: the following arguments are required: -r/--request' in result.stderr
+        assert 'error: the following arguments are required: -r/--request' in result
 
     @pytest.mark.request
     def test_unlisted_request(self):
@@ -58,7 +58,7 @@ class TestArgumLogic:
         command = ['python', './main.py', '-r', 'stub']
         result = self.run_subprocess(command)
 
-        assert "invalid choice: 'stub'" in result.stderr
+        assert "invalid choice: 'stub'" in result
 
     @pytest.mark.request
     def test_empty_request(self):
@@ -70,7 +70,7 @@ class TestArgumLogic:
         command = ['python', './main.py', '-r']
         result = self.run_subprocess(command)
 
-        assert "error: argument -r/--request: expected one argument" in result.stderr
+        assert "error: argument -r/--request: expected one argument" in result
 
     @pytest.mark.request
     def test_multiple_request(self):
@@ -81,7 +81,7 @@ class TestArgumLogic:
         command = ['python', './main.py', '-r', '\'month range\'']
         result = self.run_subprocess(command)
 
-        assert "error: argument -r/--request: invalid choice" in result.stderr
+        assert "error: argument -r/--request: invalid choice" in result
 
     # CREDENTIALS
     @pytest.mark.credentials
@@ -93,7 +93,7 @@ class TestArgumLogic:
         command = ['python', './main.py', '-r', 'month']
         result = self.run_subprocess(command)
 
-        assert 'No credentials were given\n' in result.stderr
+        assert 'No credentials were given' in result
 
     @pytest.mark.credentials
     def test_wrong_credentials(self):
@@ -105,7 +105,7 @@ class TestArgumLogic:
                    '-e', 'test@mdasd.com', '-p', '123456789']
         result = self.run_subprocess(command)
 
-        assert 'Error with credentials at Max' in result.stderr
+        assert 'Error with credentials at Max' in result
 
     # RANGE
     @pytest.mark.range
@@ -118,7 +118,7 @@ class TestArgumLogic:
                    '-e', 'test@example.com', '-p', '165121545']
         result = self.run_subprocess(command)
 
-        assert 'start date (-sd) or end date (-ed) were not entered' in result.stderr
+        assert 'start date (-sd) or end date (-ed) were not entered' in result
 
     @pytest.mark.range
     def test_range_dates_incorrect_format(self):
@@ -131,7 +131,7 @@ class TestArgumLogic:
                    '-sd', '31/7/2024', '-ed', '31072024']
         result = self.run_subprocess(command)
 
-        assert 'date format needs' in result.stderr
+        assert 'date format needs' in result
 
     @pytest.mark.range
     def test_range_start_date_is_later_than_today(self):
@@ -144,7 +144,7 @@ class TestArgumLogic:
                    '-sd', str(self.tomorrow), '-ed', str(self.next_month)]
         result = self.run_subprocess(command)
 
-        assert 'Start date cannot be later than today' in result.stderr
+        assert 'Start date cannot be later than today' in result
 
     @pytest.mark.range
     def test_range_end_date_is_later_than_today(self):
@@ -157,7 +157,7 @@ class TestArgumLogic:
                    '-sd', str(self.yesterday), '-ed', str(self.tomorrow)]
         result = self.run_subprocess(command)
 
-        assert 'End date cannot be later than today' in result.stderr
+        assert 'End date cannot be later than today' in result
 
     @pytest.mark.range
     def test_range_start_date_is_after_end_date(self):
@@ -170,7 +170,7 @@ class TestArgumLogic:
                    '-sd', str(self.today), '-ed', str(self.yesterday)]
         result = self.run_subprocess(command)
 
-        assert 'Start date cannot be later than end date' in result.stderr
+        assert 'Start date cannot be later than end date' in result
 
     @pytest.mark.range
     def test_range_start_date_is_before_four_years_ago(self):
@@ -188,7 +188,7 @@ class TestArgumLogic:
                    '-sd', str(four_years_ago_yesterday), '-ed', str(self.today)]
         result = self.run_subprocess(command)
 
-        assert 'Max limits the range for transactions from the last four years' in result.stderr
+        assert 'Max limits the range for transactions from the last four years' in result
 
     # MONTH
     # month argument (-m) must come with year argument (-y)
@@ -203,7 +203,7 @@ class TestArgumLogic:
                    '-m', '', '-y', str(self.this_year)]
         result = self.run_subprocess(command)
 
-        assert 'invalid choice: ' in result.stderr
+        assert 'invalid choice: ' in result
 
     @pytest.mark.month
     def test_month_unlisted_choice(self):
@@ -216,7 +216,7 @@ class TestArgumLogic:
                    '-m', '13', '-y', str(self.this_year)]
         result = self.run_subprocess(command)
 
-        assert 'invalid choice: ' in result.stderr
+        assert 'invalid choice: ' in result
 
     @pytest.mark.month
     def test_month_with_no_year_argument(self):
@@ -229,7 +229,7 @@ class TestArgumLogic:
                    '-m', '1']
         result = self.run_subprocess(command)
 
-        assert 'year was not entered' in result.stderr
+        assert 'year was not entered' in result
 
     @pytest.mark.month
     def test_month_year_empty(self):
@@ -242,7 +242,7 @@ class TestArgumLogic:
                    '-m', '1', '-y', '']
         result = self.run_subprocess(command)
 
-        assert 'year must be 4 character long' in result.stderr
+        assert 'year must be 4 character long' in result
 
     @pytest.mark.month
     def test_month_year_is_later_than_next_year(self):
@@ -256,7 +256,7 @@ class TestArgumLogic:
                    '-m', '1', '-y', in_two_years]
         result = self.run_subprocess(command)
 
-        assert 'Year must be between four years ago' in result.stderr
+        assert 'Year must be between four years ago' in result
 
     @pytest.mark.month
     def test_month_year_is_earlier_than_four_years_ago(self):
@@ -270,7 +270,7 @@ class TestArgumLogic:
                    '-m', '1', '-y', five_years_ago]
         result = self.run_subprocess(command)
 
-        assert 'Year must be between four years ago' in result.stderr
+        assert 'Year must be between four years ago' in result
 
     @pytest.mark.month
     def test_month_next_year_month(self):
@@ -283,7 +283,7 @@ class TestArgumLogic:
                    '-m', str(self.next_month.month), '-y', str(self.next_year)]
         result = self.run_subprocess(command)
 
-        assert 'Next year month cannot be greater than this month' in result.stderr
+        assert 'Next year month cannot be greater than this month' in result
 
     @pytest.mark.month
     def test_month_last_month_four_years_ago(self):
@@ -296,4 +296,4 @@ class TestArgumLogic:
                    '-m', str(self.last_month.month), '-y', str(self.four_years_ago_today)]
         result = self.run_subprocess(command)
 
-        assert 'Four years ago month cannot be smaller than this month' in result.stderr
+        assert 'Four years ago month cannot be smaller than this month' in result

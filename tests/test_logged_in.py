@@ -8,8 +8,10 @@ import calendar
 import random
 import subprocess
 import csv
+import sys
+
 import pytest
-from tests import secret_file # pylint: disable=no-name-in-module
+from tests import secret_file       # pylint: disable=no-name-in-module
 
 
 class TestUserLoggedIn:
@@ -30,19 +32,18 @@ class TestUserLoggedIn:
     next_year = this_year + 1
 
     @staticmethod
-    def run_subprocess(command) -> subprocess.CompletedProcess:
+    def run_subprocess(command) -> str:
         """
         subprocess to run the command line arguments
         :param command:
         :return:
         """
-        result = subprocess.run(command,
-                                stderr=subprocess.PIPE,
-                                stdout=subprocess.PIPE,
-                                text=True,
-                                shell=True,
-                                check=False)
-        return result
+        result = subprocess.Popen(command,
+                                  shell=True,
+                                  stderr=subprocess.PIPE,
+                                  stdout=subprocess.PIPE
+                                  )
+        return str(result.communicate()[1])
 
     @staticmethod
     def get_csv_files() -> list:
@@ -118,6 +119,11 @@ class TestUserLoggedIn:
         """
         email = secret_file.account_info.get('email')
         password = secret_file.account_info.get('password')
+
+        if not email and not password:
+            sys.exit("No email or password were entered in the secret file,"
+                     " please do so in order to continue")
+
         yield email, password
 
         # TEARDOWN
