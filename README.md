@@ -97,4 +97,6 @@ Technologies used in the project:
 
 ## Bugs and Feature Requests
 
+Some people asked me to tell about my progress in this project. You can see it on the [REFLECTION.md file](REFLECTION.md)
+
 if you found any bugs or have an idea for features to add feel free to open a new [issue](https://github.com/VSciFlight/max-get-transactions/issues/new)
