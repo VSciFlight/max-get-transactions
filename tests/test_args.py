@@ -30,12 +30,12 @@ class TestArgumLogic:
         :param command:
         :return:
         """
-        result = subprocess.Popen(command,
-                                  stderr=subprocess.PIPE,
-                                  stdout=subprocess.PIPE,
-                                  shell=True
-                                  )
-        return str(result.communicate()[1])
+        result = subprocess.run(command,
+                                stderr=subprocess.PIPE,
+                                text=True,
+                                shell=True,
+                                check=False)
+        return result.stderr
 
     # REQUEST ARGUMENT
     @pytest.mark.request

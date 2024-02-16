@@ -38,12 +38,13 @@ class TestUserLoggedIn:
         :param command:
         :return:
         """
-        result = subprocess.Popen(command,
-                                  shell=True,
-                                  stderr=subprocess.PIPE,
-                                  stdout=subprocess.PIPE
-                                  )
-        return str(result.communicate()[1])
+        result = subprocess.run(command,
+                                stderr=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                text=True,
+                                shell=True,
+                                check=False)
+        return result.stderr
 
     @staticmethod
     def get_csv_files() -> list:
