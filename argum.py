@@ -49,7 +49,7 @@ parser.add_argument('-nh', '--nohead',
 args: Namespace = parser.parse_args()
 
 
-def args_check_creds():
+def args_check_creds() -> None:
     """
     check credentials were entered
     :return:
@@ -66,7 +66,7 @@ def args_check_creds():
 def get_cli_arguments() -> dict:
     """Returns the CLI arguments as dictionary to main"""
     args_check_creds()
-    month = month_converter(args.month)
+    month: str = month_converter(args.month)
 
     if args.request == 'range':
         range_date_validation(args.start_date, args.end_date)
@@ -115,8 +115,8 @@ def range_date_validation(start_date: str, end_date: str) -> None:
 
     # FORMAT VALIDATION
     try:
-        sd = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
-        ed = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+        sd: datetime.date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+        ed: datetime.date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
 
     except ValueError:
         sys.exit('date format needs to look like this: "YYYY-MM-DD". example: 2024-03-31 \n'
@@ -145,7 +145,7 @@ def range_date_validation(start_date: str, end_date: str) -> None:
 def month_validation(year: str, month: str) -> None:
     """process the month validation"""
 
-    today_date = datetime.date.today()
+    today_date: datetime.date = datetime.date.today()
     # Max saves transaction data from four years ago till next year under month view.
     try:
         if int(year) < today_date.year - 4 or int(year) > today_date.year + 1:
