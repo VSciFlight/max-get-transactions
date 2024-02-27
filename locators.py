@@ -1,6 +1,6 @@
 """Module responsible for storing locators within Max.co.il"""
 
-max_loc = {'personal_zone': ('xpath', '//*[contains(@class, "go-to-personal-area log-in-status")]'),
+max_loc: dict = {'personal_zone': ('xpath', '//*[contains(@class, "go-to-personal-area log-in-status")]'),
            'login_with_password': ('xpath', '//span[contains(text(), "כניסה עם סיסמה")]'),
            'login_with_id': ('xpath', '//*[@id="login-id-link"]'),
            'login_send_code': ('xpath', '//*[@id="send-code"]'),

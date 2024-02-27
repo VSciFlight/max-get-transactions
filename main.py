@@ -4,12 +4,12 @@ import func
 import argum
 
 
-def main():
+def main() -> None:
     """
     The main function of the repository, showcase a high level view on the flow
     :return:
     """
-    creds = argum.get_cli_arguments()
+    creds: dict = argum.get_cli_arguments()
 
     driver = func.driver()
     time.sleep(2)

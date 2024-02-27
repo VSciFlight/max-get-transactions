@@ -18,7 +18,7 @@ from argum import args
 
 
 # DRIVER
-def driver_init():
+def driver_init() -> u.webdriver.Chrome:
     """Webdriver initiation - browser settings"""
     chrome_options = u.webdriver.ChromeOptions()
 
@@ -34,7 +34,7 @@ def driver_init():
     return driver
 
 
-def driver():
+def driver() -> u.webdriver.Chrome:
     """Calling webdriver"""
     u.logger.info("initiating bot....")
     get_driver = driver_init()
@@ -57,7 +57,7 @@ def max_login(driver, email: str, password: str) -> None:
     """
 
     # login
-    tries = 0
+    tries: int = 0
     while tries < 2:
         try:
             u.WDW(driver, 5).until(u.EC.visibility_of_element_located(loc.max_loc['personal_zone'])).click()
@@ -110,21 +110,19 @@ def get_transactions(driver, max_request: str, credx: dict) -> str:
     # redirection to the transactions page
     driver.get("https://www.max.co.il/transaction-details/personal")
 
-    today_date = datetime.date.today()
-    this_year = today_date.year
-    today = str(today_date)          # string year-month-day
+    today_date: datetime.date = datetime.date.today()
+    this_year: int = today_date.year
+    today: str = str(today_date)          # string year-month-day
 
     if max_request == 'ytd':
         start_date = f'{this_year}-01-01'
-        today_date = f'{today}'
         logger.info(f"getting transaction from start of this year to {today}")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today_date}_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today}_-1&sort=1a_1a_1a_1a_1a_1a")
 
     elif max_request == 'this_month':
         start_date = f'{this_year}-{today_date.month}-01'
-        today_date = f'{today}'
         logger.info("getting transactions from this month")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today_date}_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today}_-1&sort=1a_1a_1a_1a_1a_1a")
 
     elif max_request == 'range':
         logger.info(f"getting transactions from {credx['start_date']} until {credx['end_date']}")
@@ -138,10 +136,10 @@ def get_transactions(driver, max_request: str, credx: dict) -> str:
     else:
         return "didn't get your request hon"
 
-    data = data_scrape_from_table(driver)
+    data: dict = data_scrape_from_table(driver)
     convert_to_table(data, max_request)
 
-    message = "these are your requested transactions \n"
+    message: str = "these are your requested transactions \n"
     for i in range(len(data['amounts'])):
         message += f"transaction {i}: {data['amounts'][i]} at {data['places'][i]} on {data['dates'][i]} with card {data['cards'][i]} \n"
 
@@ -197,7 +195,7 @@ def data_scrape_from_table(driver) -> dict:
     return data
 
 
-def format_amounts(data: str):
+def format_amounts(data: str) -> Decimal:
     """Cleaning the data from the shekel sign and then reformatting it to be a decimal"""
     map_chars = str.maketrans({'₪': '', '$': '', '€': '', '£': '', ',': ''})
     amount_stripped = data.translate(map_chars)
@@ -220,3 +218,5 @@ def format_currency(data: str) -> str:
             return 'GBP'
 
         return "-"
+
+    return "No Currency Specified"
