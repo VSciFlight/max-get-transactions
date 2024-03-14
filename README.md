@@ -2,7 +2,8 @@
 
 Repo for getting transactions in Max to a CSV file
 
-![max-get-transactions](https://socialify.git.ci/VSciFlight/max-get-transactions/image?logo=https%3A%2F%2Fmedia.licdn.com%2Fdms%2Fimage%2FD4D03AQHxkHs-K9bSbA%2Fprofile-displayphoto-shrink_800_800%2F0%2F1673251636113%3Fe%3D1713398400%26v%3Dbeta%26t%3DD40rP28WlLGa-cyngSFNAQ2YsqCIMi6nvTfri7_MFGI&owner=1&theme=Auto)
+[![DEMO](https://i.ibb.co/Yk9Qvdq/www-max-co-il.png)](https://youtu.be/W94_MA4hI7U)
+
 
 ## Background
 
