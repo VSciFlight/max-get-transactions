@@ -5,7 +5,7 @@ max_loc: dict = {
     'login_with_password': ('xpath', '//span[contains(text(), "כניסה עם סיסמה")]'),
     'login_with_id': ('xpath', '//*[@id="login-id-link"]'),
     'login_send_code': ('xpath', '//*[@id="send-code"]'),
-    'login_button_login': ('xpath', '//*[@id="send-code" and @tabindex="3"]'),
+    'login_button_login': ('xpath', '//span[text()="לכניסה לאזור האישי"]/..'),
     'input_id_number': ('xpath', '//input[@id="id-passport"]'),
     'input_username': ('xpath', '//input[@id="user-name"]'),
     'input_password': ('xpath', '//input[@id="password"]'),
