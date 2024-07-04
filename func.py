@@ -116,22 +116,24 @@ def get_transactions(driver, max_request: str, credx: dict) -> str:
 
     if max_request == 'ytd':
         start_date = f'{this_year}-01-01'
+        today_date = f'{today}'
         logger.info(f"getting transaction from start of this year to {today}")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today}_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_1_{this_year}-01-01_{start_date}_{today_date}_-1&sort=1a_1a_1a_1a_1a_1a")
 
     elif max_request == 'this_month':
         start_date = f'{this_year}-{today_date.month}-01'
+        today_date = f'{today}'
         logger.info("getting transactions from this month")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{start_date}_{today}_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_1_{this_year}-01-01_{start_date}_{today_date}_-1&sort=1a_1a_1a_1a_1a_1a")
 
     elif max_request == 'range':
         logger.info(f"getting transactions from {credx['start_date']} until {credx['end_date']}")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{this_year}-01-01_{credx['start_date']}_{credx['end_date']}_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_1_{this_year}-01-01_{credx['start_date']}_{credx['end_date']}_-1&sort=1a_1a_1a_1a_1a_1a")
 
     elif max_request == 'month':
         year_month = credx['year'] + "-" + credx['month']
         logger.info(f"getting transactions from month {credx['month']} and year {credx['year']}")
-        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_0_{year_month}-01_-1&sort=1a_1a_1a_1a_1a_1a")
+        driver.get(f"https://www.max.co.il/transaction-details/personal?sourceGA=CommonActions&filter=-1_-1_1_{year_month}-01_0_0_-1&sort=1a_1a_1a_1a_1a_1a")
 
     else:
         return "didn't get your request hon"
